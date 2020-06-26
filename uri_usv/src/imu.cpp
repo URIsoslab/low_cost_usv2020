@@ -5,9 +5,9 @@ Jan-09-2020, Mingxi, Code clean up, and remove the rpm averaging
                      m_imu, m_rpy, m_heading
 */
 //include C language libraries
-extern "C" {
-#include "rc_usefulincludes.h"
-}
+//extern "C" {
+//#include "rc_usefulincludes.h"
+//}
 extern "C" {
 #include "roboticscape.h"
 }
@@ -16,8 +16,8 @@ extern "C" {
 #include <getopt.h>
 #include <signal.h>
 #include <stdlib.h>  // for atoi() and exit()
-#include <rc/mpu.h>
-#include <rc/time.h>
+//#include <rc/mpu.h>
+//#include <rc/time.h>
 #include <sstream>
 
 #include "ros/ros.h"
@@ -65,8 +65,8 @@ int main(int argc, char** argv)
   	conf.gpio_interrupt_pin_chip = GPIO_INT_PIN_CHIP;
 	conf.gpio_interrupt_pin = GPIO_INT_PIN_PIN;
 	//IMU Configuration setting
-  	conf.dmp_sample_rate = 10;	//sampling rate
-  	conf.enable_magnetometer = 1;	//enable magnetometer
+  	conf.dmp_sample_rate = 100;	//sampling rate
+  	conf.enable_magnetometer = 1;	//enable magnetometer, set to 0 for no magnetometer
 	conf.dmp_auto_calibrate_gyro = 1;	//enable auto calibrate on the gyro
 	conf.dmp_fetch_accel_gyro=1;		//enable accel and gyro reading in dmp.
 	//refer to the robotic control library for more options

@@ -1,0 +1,6 @@
+<launch>
+	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" output="screen"> 
+	</node>
+	<node name="imu" pkg="uri_usv" type="imu" output="screen">
+	</node>
+</launch>
