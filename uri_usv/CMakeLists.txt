@@ -69,3 +69,5 @@ link_directories(
 add_executable(rc_pwm src/rc_pwm.cpp)
 target_link_libraries(rc_pwm roboticscape ${catkin_LIBRARIES})
 
+add_executable(VI_sensor src/VI_sensor.cpp)
+target_link_libraries(VI_sensor roboticscape ${catkin_LIBRARIES})
