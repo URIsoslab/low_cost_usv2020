@@ -51,10 +51,11 @@ class imu_driver
 	sensor_msgs::MagneticField imu_mag;  //IMU Mage
 	geometry_msgs::Vector3 rpy_data; //roll pitch yaw data
   	std_msgs::Float64 heading_data;  //heading data
-	public:	
+	double hz=50;
+	public:
 	imu_driver()
 	{
-		double hz=20;
+		//double hz=20;
 		imu_pub = nh.advertise<sensor_msgs::Imu>("/imu/data_raw", 2);
 		mag_pub = nh.advertise<sensor_msgs::MagneticField>("/imu/mag", 2);
 		rpy_pub = nh.advertise<geometry_msgs::Vector3>("/imu/rpy", 2);
@@ -73,13 +74,13 @@ class imu_driver
 	  	signal(SIGINT, MySigintHandler);
 	  	running = 1;
 		ROS_INFO("Node started");
-		
+
 	}
-	
+
 	void imu_sample()
 	{
-	ros::Rate loop_rate(20);
-	
+	ros::Rate loop_rate(hz);
+
 	while (ros::ok()&running)
 	{
 		//read data
@@ -114,7 +115,7 @@ class imu_driver
   		loop_rate.sleep();
 	}
 	}
-	
+
 	void imu_callback(const sensor_msgs::Imu::ConstPtr& msg)
 	{
 	tf::Quaternion q(msg->orientation.x,
@@ -126,9 +127,13 @@ class imu_driver
 	rpy_data.x=rpy_data.x*RAD_TO_DEG;
 	rpy_data.y=rpy_data.y*RAD_TO_DEG;
 	rpy_data.z=rpy_data.z*RAD_TO_DEG;
+	//wrap around 0 to 360
+	if(rpy_data.z<0) rpy_data.z = rpy_data.z+360;
+	if(rpy_data.x<0) rpy_data.x = rpy_data.x+360;
+	if(rpy_data.y<0) rpy_data.y = rpy_data.y+360;
 	rpy_pub.publish(rpy_data);
 	}
-	
+
 	private:
 		ros::NodeHandle nh;
 		ros::Publisher imu_pub;

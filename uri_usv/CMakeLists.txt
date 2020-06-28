@@ -74,3 +74,7 @@ target_link_libraries(VI_sensor roboticscape ${catkin_LIBRARIES})
 
 add_executable(imu src/imu.cpp)
 target_link_libraries(imu roboticscape ${catkin_LIBRARIES})
+
+add_executable(heading_PID src/heading_PID.cpp)
+target_link_libraries(heading_PID roboticscape ${catkin_LIBRARIES})
+
