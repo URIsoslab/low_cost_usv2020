@@ -78,3 +78,6 @@ target_link_libraries(imu roboticscape ${catkin_LIBRARIES})
 add_executable(heading_PID src/heading_PID.cpp)
 target_link_libraries(heading_PID roboticscape ${catkin_LIBRARIES})
 
+
+add_executable(auto_pwm src/auto_pwm.cpp)
+target_link_libraries(auto_pwm roboticscape ${catkin_LIBRARIES})

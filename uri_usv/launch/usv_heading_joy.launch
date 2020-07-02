@@ -1,0 +1,18 @@
+<launch>
+	<node name="auto_pwm" pkg="uri_usv" type="auto_pwm" output="screen"> 
+	</node>
+	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" output="screen"> 
+	</node>
+	<node name="imu" pkg="uri_usv" type="imu" output="screen">
+	</node>
+	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
+		<param name = "constant_dt"  value ="0.0"/>		
+	</node>
+	<node name="heading_PID" pkg="uri_usv" type="heading_PID" output="screen">
+		<param name = "K_p"  value ="10.0"/>
+		<param name = "K_i"   value ="0.0"/>
+		<param name = "K_d"   value ="0.0"/>
+		<param name = "K_g"   value ="0.001"/>
+		<param name = "Total_thrust" value ="1"/>
+	</node>
+</launch>
