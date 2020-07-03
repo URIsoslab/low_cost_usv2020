@@ -36,9 +36,9 @@ class HeadingPID
 	std_msgs::Float64 stdb_pwm, port_pwm;
 	float K_p, K_i,K_d,K_g,total_pwm, delta_pwm;
 	float c_heading,i_heading, m_heading, d_heading, o_m_heading, e_heading;
-	float ct, dt;
+	double ct, dt;
 	float hz=10;
-	public:	
+	public:
 	HeadingPID()
 	{
 		stdb_thrust_pub = nh.advertise<std_msgs::Float64>("/thrusters/stdb_cmd", 2);
@@ -64,7 +64,7 @@ class HeadingPID
 		ROS_INFO("Node started");
 		ct = ros::Time::now().toSec();
 	}
-	
+
 	void imu_callback(const sensor_msgs::Imu::ConstPtr& msg)
 	{
 		tf::Quaternion q(msg->orientation.x,
@@ -76,12 +76,13 @@ class HeadingPID
 		m_heading = rpy_data.z*RAD_TO_DEG;
 		d_heading = -msg->angular_velocity.z*RAD_TO_DEG;// added minus sign becaues error = c_heading -m_heading
 	}
-	
+
 	void c_heading_callback(const std_msgs::Float64::ConstPtr& msg)
 	{
 		c_heading = msg->data;
+		i_heading =0;
 	}
-	
+
 	void running()
 	{
 		ros::Rate loop_rate(hz);
@@ -97,16 +98,17 @@ class HeadingPID
 			{
 				e_heading  = 360 + e_heading ;
 			}
-			
+
 			//PID part
-			dt = ros::Time::now().toSec() - ct; //compute delta t
+			dt = ros::Time::now().toSec()-ct; //compute delta t
 			ct = ros::Time::now().toSec();//update time
 
 			i_heading = i_heading+e_heading*dt; //compute integration error
 			delta_pwm = K_g*(K_p*e_heading + K_i*i_heading + K_d*d_heading);
+			ROS_INFO("%f|%f|%f",delta_pwm,dt,ct);
 			stdb_pwm.data = total_pwm/2.0 + delta_pwm/2.0;
 			port_pwm.data = total_pwm - stdb_pwm.data;
-			
+
 			//saturation
 			if(stdb_pwm.data>1) stdb_pwm.data=1;
 			if(stdb_pwm.data<0) stdb_pwm.data=0;

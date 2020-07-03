@@ -25,7 +25,7 @@ int INIT_PULSE_WIDTH = 1000; //us
 int WAKEUP_EN = 1;      // wakeup period enabled by default
 double WAKEUP_S = 3.0;  // wakeup period in seconds
 double WAKEUP_VAL = -0.1;// wakeup value
-float MAX_PW_INCREMENT =200.0;// This is the hard limit for the thruster to prevent drawing too much current
+float MAX_PW_INCREMENT =150.0;// This is the hard limit for the thruster to prevent drawing too much current
 
 int AUTO_FLAG=0;
 
