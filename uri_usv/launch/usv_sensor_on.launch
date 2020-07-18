@@ -6,4 +6,6 @@
 	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
 		<param name = "constant_dt"  value ="0.0"/>		
 	</node>
+	<node name="rf_node" pkg="digi_ros_com" type="rf_node" output="screen">
+	</node>
 </launch>

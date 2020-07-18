@@ -104,6 +104,7 @@ class imu_driver
 	    	imu_data.angular_velocity.y = data.gyro[1]*DEG_TO_RAD;
 	    	imu_data.angular_velocity.z = data.gyro[2]*DEG_TO_RAD;
 		imu_data.header.stamp =  ros::Time::now();
+		imu_data.header.frame_id="imu";
 		imu_mag.magnetic_field.x = data.mag[0];
 		imu_mag.magnetic_field.y = data.mag[1];
 		imu_mag.magnetic_field.z = data.mag[2];
