@@ -1,0 +1,10 @@
+<launch>
+	<arg name="port_name" default="/dev/ttyS1" />
+
+	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
+	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen"/>
+		<param name="port_name" value="$(arg port_name)" />
+	<node name="rf_tx_beat" pkg="digi_ros_com" type="rf_tx_beat" output="screen">
+		<param name = "hz"  value ="10.0"/>
+	</node>
+</launch>

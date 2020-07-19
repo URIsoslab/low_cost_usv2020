@@ -1,4 +1,12 @@
 <launch>
+	<arg name="port_name" default="/dev/ttyS1"/>
+	<arg name="port" default="/dev/ttyS5" />
+ 	 <arg name="baud" default="9600" />
+  	<arg name="frame_id" default="/wgs84" />
+  	<arg name="use_GNSS_time" default="False" />
+  	<arg name="time_ref_source" default="gps" />
+  	<arg name="useRMC" default="False" />
+
 	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" output="screen"> 
 	</node>
 	<node name="imu" pkg="uri_usv" type="imu" output="screen">
@@ -6,6 +14,20 @@
 	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
 		<param name = "constant_dt"  value ="0.0"/>		
 	</node>
-	<node name="rf_node" pkg="digi_ros_com" type="rf_node" output="screen">
+
+	<node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+    		<param name="port" value="$(arg port)"/>
+    		<param name="baud" value="$(arg baud)" />
+    		<param name="frame_id" value="$(arg frame_id)" />
+    		<param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
+    		<param name="time_ref_source" value="$(arg time_ref_source)" />
+ 		<param name="useRMC" value="$(arg useRMC)" />
+  	</node>
+
+	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen">
+		<param name="port_name" type="string" value="$(arg port_name)"/>
+	</node>
+	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat" output="screen">
+		<param name = "hz"  value ="10.0"/>
 	</node>
 </launch>
