@@ -18,9 +18,11 @@ int main (int argc, char **argv)
 	RF RF_node(nh);
 	running =1;
 	signal(SIGINT, MySigintHandler);
+	ros::Rate loop_rate(100);  //esc need 50 Hz
 	while(ros::ok()&running)
 	{
-	ros::spinOnce();
+		RF_node.NMEA2ROS();
+		ros::spinOnce();
 	}
 	return 0;
 }

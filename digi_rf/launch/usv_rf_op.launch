@@ -1,0 +1,12 @@
+<launch>
+	<arg name="port_name" default="/dev/ttyUSB0" />
+	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
+	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen">
+			<param name="port_name" value="$(arg port_name)" />
+			<param name="ROS2NMEA" value="64" />
+			<param name="NMEA2ROS" value="19" />
+		</node>
+	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat" output="screen">
+				<param name = "hz"  value ="2.0"/>
+	</node>
+</launch>

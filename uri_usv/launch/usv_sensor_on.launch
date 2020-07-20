@@ -26,8 +26,10 @@
 
 	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen">
 		<param name="port_name" type="string" value="$(arg port_name)"/>
+		<param name="ROS2NMEA" value="19" />
+		<param name="NMEA2ROS" value="64" />
 	</node>
 	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat" output="screen">
-		<param name = "hz"  value ="10.0"/>
+		<param name = "hz"  value ="5.0"/>
 	</node>
 </launch>
