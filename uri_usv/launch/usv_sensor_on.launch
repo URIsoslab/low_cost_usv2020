@@ -14,7 +14,7 @@
 	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
 		<param name = "constant_dt"  value ="0.0"/>		
 	</node>
-
+	
 	<node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
     		<param name="port" value="$(arg port)"/>
     		<param name="baud" value="$(arg baud)" />
@@ -23,13 +23,13 @@
     		<param name="time_ref_source" value="$(arg time_ref_source)" />
  		<param name="useRMC" value="$(arg useRMC)" />
   	</node>
-
+	<remap from="/rf/joy" to="/joy"/>
 	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen">
 		<param name="port_name" type="string" value="$(arg port_name)"/>
 		<param name="ROS2NMEA" value="19" />
 		<param name="NMEA2ROS" value="64" />
 	</node>
 	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat" output="screen">
-		<param name = "hz"  value ="5.0"/>
+		<param name = "hz"  value ="10.0"/>
 	</node>
 </launch>

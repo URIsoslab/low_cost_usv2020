@@ -98,7 +98,7 @@ void RF::imu_callback(const sensor_msgs::Imu::ConstPtr& msg)
 //	ROS_INFO("%s",o_data);
 	calcChecksum(cs,o_data);
 	//re-do the sprintf to imu_data
-	num = sprintf(imu_data,"$IMU,%s,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*%x\r\n",
+	num = sprintf(imu_data,"$IMU,%s,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*%02X\r\n",
 																	imu_val.frame, imu_val.time,
 																	imu_val.ori[0],imu_val.ori[1],imu_val.ori[2],imu_val.ori[3],
 																	imu_val.ang_vel[0],imu_val.ang_vel[1],imu_val.ang_vel[2],
@@ -140,7 +140,7 @@ void RF::time_callback(const sensor_msgs::TimeReference::ConstPtr& msg)
 													   gps_val.cog,gps_val.sog,
 														 gps_val.roll,gps_val.pitch,gps_val.utc_time);
 	calcChecksum(cs,o_data);
-	num=sprintf(gps_data,"$GPS,%s,%.3lf,%.5lf,%.5lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*%X\r\n",
+	num=sprintf(gps_data,"$GPS,%s,%.3lf,%.5lf,%.5lf,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*%02X\r\n",
 														 gps_val.frame,gps_val.time,gps_val.latitude,gps_val.longitude,
 													   gps_val.cog,gps_val.sog,
 														 gps_val.roll,gps_val.pitch,gps_val.utc_time,cs);
@@ -165,7 +165,7 @@ void RF::joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 													joy_val.time, joy_val.ls, joy_val.rs,
 													joy_val.st, joy_val.bk, joy_val.A, joy_val.B, joy_val.X, joy_val.Y);
 	calcChecksum(cs,o_data);
-	num=sprintf(joy_data,"$JOY,%.3lf,%.3lf,%.3lf,%d,%d,%d,%d,%d,%d*%X\r\n",
+	num=sprintf(joy_data,"$JOY,%.3lf,%.3lf,%.3lf,%d,%d,%d,%d,%d,%d*%02X\r\n",
 													joy_val.time, joy_val.ls, joy_val.rs,
 													joy_val.st, joy_val.bk, joy_val.A, joy_val.B, joy_val.X, joy_val.Y,cs);
 	MSG_UPDATE_FLAG[JOY_MSG_ID]= 1;
@@ -190,7 +190,7 @@ void RF::vip_callback(const sensor_msgs::BatteryState::ConstPtr& msg)
 	num=sprintf(o_data,"$SYS,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*00\r\n",
 													sys_val.time, sys_val.vm, sys_val.im, sys_val.vp, sys_val.ip);
 	calcChecksum(cs,o_data);
-	num=sprintf(sys_data,"$SYS,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*%X\r\n",
+	num=sprintf(sys_data,"$SYS,%.3lf,%.3lf,%.3lf,%.3lf,%.3lf*%02X\r\n",
 													sys_val.time, sys_val.vm, sys_val.im, sys_val.vp, sys_val.ip,cs);
 	MSG_UPDATE_FLAG[SYS_MSG_ID]= 1;
 }
@@ -234,15 +234,18 @@ void RF::NMEA2ROS()
   eol.append(1,0xd);
   eol.append(1,0xa);
 	char _data[256]={0};
+	char __data[256]={0};
 	char header[3]={0};
 	std::string s_data;
+
+	int c =0;
 	//check serial port for data
 	s_data.clear();
 	if(ser->available())
 	{
-		s_data = ser->readline(sz_t,eol);
+		s_data = ser->readline(sz_t,"\n");
 		strcpy(_data,s_data.c_str());
-//  ROS_INFO("%s",_data);
+    ROS_INFO("%s",_data);
 	//we check the starting byte
 	//check the first byte
 	if(_data[0]=='$')
@@ -459,26 +462,74 @@ bool RF::calcChecksum(int &crc, char cdata[256])	//return check flag and return 
     	//NMNA0183
 			std::string ss = cdata;
     	int sz = ss.size();
-			//ROS_INFO("%d",sz);
+		//	ROS_INFO("%s,%d,%c",cdata,sz,cdata[sz-4]);
     	int i;
-			//char cs[2];
+			//for (i = 0; i < sz; i ++)
+			//{
+				//printf("%c=%d,",cdata[i],cdata[i]);
+			//}
 			crc=0;
     	//$*00<CR><LF>
-			if(sz>10)
+		//	if(!checkIntegrity(ss))
+		//	{
+			// return 0;
+	 		//}
+    	for (i = 1; i < sz - 5; i ++)
 			{
-    	for (i = 1; i < sz - 5; i ++) {
-				if(cdata[i] < 32 | cdata[i] > 126)  //string with bad char
-				{
-					return 0;
-				}
 				crc ^= cdata[i];
     	}
-			//cs[0]=cdata[sz-4];
-			//cs[1]=cdata[sz-3];
 
+		//	ROS_INFO("end");
 		//	int checksum = std::stoi(cs,0,16);
 			int checksum =std::stoi(ss.substr(sz-4, 2), nullptr, 16);
   		return crc == checksum;
-			}
+
 			return 0;
+}
+
+
+
+
+bool RF::checkIntegrity(std::string& nmea_data)
+{
+    // return error_value
+
+    int sz = nmea_data.size();
+    int i;
+
+    // check min size
+    if(sz<=6){
+        ROS_INFO("bad size");
+        return false;
+    }
+
+    // find bad char
+    bool isFound = false;
+    std::vector<int> bad_char;
+    for(i=0; i<sz; i++)
+    {
+        if( (nmea_data[i] < 32 || nmea_data[i] > 126) && nmea_data[i] != 10 && nmea_data[i] != 13){//ASCII: "Space" and "~"
+            bad_char.push_back(i);
+            isFound = true;
+        }
+    }
+    // delete bad char
+    if(isFound){
+        for(i=0; i<bad_char.size(); i++)
+        {
+            nmea_data.erase(bad_char[i]-i,1);
+        }
+
+        ROS_WARN("bad char sz is: %ld\n", bad_char.size());
+    }
+
+    //$,data,...,data*00<CR><LR>
+    //Check: Start delimiter, Checksum delimiter, 2 bits checksum, Carriage return, Line feed
+    sz = nmea_data.size();
+    if(!(nmea_data.at(0)=='$' && nmea_data.at(sz - 5)=='*')){
+        ROS_WARN(" Warning: bad integrality");
+        return false;
+    }
+
+    return true;
 }

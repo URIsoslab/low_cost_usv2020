@@ -15,6 +15,8 @@ The code was made for Digi RF Xbee pro 900Mhz module.
 #include <unistd.h>
 #include <signal.h>
 #include <cstdio>
+#include <ctype.h>
+#include <stdint.h>
 #include "serial/serial.h"
 #include "sensor_msgs/Imu.h"
 #include "gps_common/GPSFix.h"
@@ -148,6 +150,7 @@ class RF
   int parse_joy(char data[256]);
   int parse_sys(char data[256]);
   bool calcChecksum(int &crc, char cdata[256]);
+  bool checkIntegrity(std::string& nmea_data);
   private:
     //foo template
   	ros::Publisher foo_pub;
