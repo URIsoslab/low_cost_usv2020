@@ -140,14 +140,17 @@ int main(int argc, char** argv)
 
 	//Remote control mode
 	ros::Subscriber sub1 = nh.subscribe("/joy", 2, Motor_Callback);
-	ros::Subscriber sub2 = nh.subscribe("/thrusters/stdb_cmd",2, stdb_callback);
-	ros::Subscriber sub3 = nh.subscribe("/thrusters/port_cmd",2, port_callback);
-	//ros::Publisher port_pwm_pub = nh.advertise<std_msgs::Float64>("/usv/port_motor/cmd", 2);
-  	//ros::Publisher stdb_pwm_pub = nh.advertise<std_msgs::Float64>("/usv/stdb_motor/cmd", 2);
-
+	ros::Subscriber sub2 = nh.subscribe("/gnc/stdb_cmd",2, stdb_callback);
+	ros::Subscriber sub3 = nh.subscribe("/gnc/port_cmd",2, port_callback);
+	ros::Publisher port_pwm_pub = nh.advertise<std_msgs::Int8>("/joy/port_cmd", 2);
+  	ros::Publisher stdb_pwm_pub = nh.advertise<std_msgs::Int8>("/joy/stdb_cmd", 2);
+	ros::Publisher mode_pub = nh.advertise<std_msgs::Int8>("/gnc/mode",2);
 
 	ros::Rate loop_rate(50);  //esc need 50 Hz
-
+	
+	std_msgs::Int8 gnc_mode;
+	std_msgs::Int8 joy_port;
+	std_msgs::Int8 joy_stdb;
 	//START THE LOOP
   	while (ros::ok() & running)
   	{
@@ -155,7 +158,15 @@ int main(int argc, char** argv)
 	  	// send pwm adjust command
 		rc_servo_send_pulse_us(1, c_port_cmd);//port side
 		rc_servo_send_pulse_us(3, c_stdb_cmd);//starboard side
+		//joy stuff
+		joy_port.data=c_port_cmd;
+		joy_stdb.data=c_stdb_cmd;
+		gnc_mode.data = AUTO_FLAG;
 
+		port_pwm_pub.publish(joy_port);
+		stdb_pwm_pub.publish(joy_stdb);
+		mode_pub.publish(gnc_mode);		
+				
 	    	ros::spinOnce();
     		loop_rate.sleep();
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(uri_usv)
+project(usv_gnc)
 #2024 4 4
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -14,6 +14,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   message_generation
+  tf2_ros
+  tf2
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -54,7 +57,7 @@ catkin_package(
 ## Build talker and listener
 include_directories(
 include
-#/usr/include
+/usr/include
  ${catkin_INCLUDE_DIRS})
  
 link_directories(
@@ -66,14 +69,8 @@ link_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable(rc_pwm src/rc_pwm.cpp)
-target_link_libraries(rc_pwm roboticscape ${catkin_LIBRARIES})
-
-add_executable(VI_sensor src/VI_sensor.cpp)
-target_link_libraries(VI_sensor roboticscape ${catkin_LIBRARIES})
-
-add_executable(imu src/imu.cpp)
-target_link_libraries(imu roboticscape ${catkin_LIBRARIES})
+#add_executable(rc_pwm src/rc_pwm.cpp)
+#target_link_libraries(rc_pwm roboticscape ${catkin_LIBRARIES})
 
 add_executable(heading_PID src/heading_PID.cpp)
 target_link_libraries(heading_PID roboticscape ${catkin_LIBRARIES})
@@ -81,3 +78,12 @@ target_link_libraries(heading_PID roboticscape ${catkin_LIBRARIES})
 
 add_executable(auto_pwm src/auto_pwm.cpp)
 target_link_libraries(auto_pwm roboticscape ${catkin_LIBRARIES})
+
+
+add_executable(guidance_node
+  include/guidance/guidance.h
+  src/guidance.cpp
+  src/guidance_node.cpp
+)
+add_dependencies(guidance_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(guidance_node ${catkin_LIBRARIES})

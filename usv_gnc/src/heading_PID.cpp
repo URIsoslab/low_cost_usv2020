@@ -41,10 +41,10 @@ class HeadingPID
 	public:
 	HeadingPID()
 	{
-		stdb_thrust_pub = nh.advertise<std_msgs::Float64>("/thrusters/stdb_cmd", 2);
-		port_thrust_pub = nh.advertise<std_msgs::Float64>("/thrusters/port_cmd", 2);
-	  	imu_sub = nh.subscribe("/imu/data",2,&HeadingPID::imu_callback,this);
-		c_heading_sub = nh.subscribe("/control/heading",2,&HeadingPID::c_heading_callback,this);
+		stdb_thrust_pub = nh.advertise<std_msgs::Float64>("/gnc/stdb_cmd", 2);
+		port_thrust_pub = nh.advertise<std_msgs::Float64>("/gnc/port_cmd", 2);
+	  	imu_sub = nh.subscribe("/sensor/imu/data",2,&HeadingPID::imu_callback,this);
+		c_heading_sub = nh.subscribe("/gnc/c_heading",2,&HeadingPID::c_heading_callback,this);
 		//parameters
 		//default
 		K_p=1;

@@ -56,10 +56,10 @@ class imu_driver
 	imu_driver()
 	{
 		//double hz=20;
-		imu_pub = nh.advertise<sensor_msgs::Imu>("/imu/data_raw", 2);
-		mag_pub = nh.advertise<sensor_msgs::MagneticField>("/imu/mag", 2);
-		rpy_pub = nh.advertise<geometry_msgs::Vector3>("/imu/rpy", 2);
-	  	imu_sub = nh.subscribe("/imu/data",10,&imu_driver::imu_callback,this);
+		imu_pub = nh.advertise<sensor_msgs::Imu>("/sensor/imu/data_raw", 2);
+		mag_pub = nh.advertise<sensor_msgs::MagneticField>("/sensor/imu/mag", 2);
+		rpy_pub = nh.advertise<geometry_msgs::Vector3>("/sensor/imu/rpy", 2);
+	  	imu_sub = nh.subscribe("/sensor/imu/data",10,&imu_driver::imu_callback,this);
 		////configuration of the imu
   		conf.i2c_bus = I2C_BUS;
 		conf.enable_magnetometer = 1;	//enable magnetometer, set to 0 for no magnetometer

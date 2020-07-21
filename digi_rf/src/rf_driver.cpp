@@ -19,16 +19,16 @@ RF::RF(ros::NodeHandle nh)
 	if(R2N_DEFAULT>>(IMU_MSG_ID-1) & 0x01)
 	{
 	ROS_INFO("R2N IMU");
-	imu_sub = nh.subscribe("/imu/data",2, &RF::imu_callback,this);
+	imu_sub = nh.subscribe("/sensor/imu/data",2, &RF::imu_callback,this);
 	}
 	//subscribe to nmea gps_val topics
 	if(R2N_DEFAULT>>(GPS_MSG_ID-1) & 0x01)
 	{
 	ROS_INFO("R2N GPS");
-	fix_sub = nh.subscribe("/fix",2, &RF::fix_callback,this);
-	vel_sub = nh.subscribe("/vel",2, &RF::vel_callback,this);
-	time_sub = nh.subscribe("/time_reference",2, &RF::time_callback,this);
-	rpy_sub = nh.subscribe("/imu/rpy",2, &RF::rpy_callback,this);
+	fix_sub = nh.subscribe("/sensor/m_fix",2, &RF::fix_callback,this);
+	vel_sub = nh.subscribe("/sensor/m_vel",2, &RF::vel_callback,this);
+	time_sub = nh.subscribe("/sensor/m_time_reference",2, &RF::time_callback,this);
+	rpy_sub = nh.subscribe("/sensor/imu/rpy",2, &RF::rpy_callback,this);
 	}
 	if(R2N_DEFAULT>>(SYS_MSG_ID-1) & 0x01)
 	{
@@ -46,12 +46,12 @@ RF::RF(ros::NodeHandle nh)
 	if(N2R_DEFAULT>>(IMU_MSG_ID-1) & 0x01 )
 	{
 	ROS_INFO("N2R IMU");
-	imu_pub = nh.advertise<sensor_msgs::Imu>("/rf/imu/data", 2);
+	imu_pub = nh.advertise<sensor_msgs::Imu>("/rf/sensor/imu/data", 2);
 	}
 	if(N2R_DEFAULT>>(GPS_MSG_ID-1) & 0x01 )
 	{
 	ROS_INFO("N2R GPS");
-	gps_pub = nh.advertise<gps_common::GPSFix>("/rf/gps",2);
+	gps_pub = nh.advertise<gps_common::GPSFix>("/rf/sensor/gps",2);
 	}
 	if(N2R_DEFAULT>>(JOY_MSG_ID-1) & 0x01 )
 	{
@@ -61,8 +61,8 @@ RF::RF(ros::NodeHandle nh)
 	if(N2R_DEFAULT>>(SYS_MSG_ID-1) & 0x01 )
 	{
 	ROS_INFO("N2R SYS");
-	vm_pub  = nh.advertise<sensor_msgs::BatteryState>("/rf/m_VI",2);
-	vp_pub  = nh.advertise<sensor_msgs::BatteryState>("/rf/m_VI_payload",2);
+	vm_pub  = nh.advertise<sensor_msgs::BatteryState>("/rf/sensor/m_VI",2);
+	vp_pub  = nh.advertise<sensor_msgs::BatteryState>("/rf/sensor/m_VI_payload",2);
 	}
 }
 
@@ -245,7 +245,7 @@ void RF::NMEA2ROS()
 	{
 		s_data = ser->readline(sz_t,"\n");
 		strcpy(_data,s_data.c_str());
-    ROS_INFO("%s",_data);
+  //  ROS_INFO("%s",_data);
 	//we check the starting byte
 	//check the first byte
 	if(_data[0]=='$')

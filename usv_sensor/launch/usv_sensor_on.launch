@@ -1,33 +1,39 @@
 <launch>
 	<arg name="port_name" default="/dev/ttyS1"/>
 	<arg name="port" default="/dev/ttyS5" />
- 	 <arg name="baud" default="9600" />
+ 	<arg name="baud" default="9600" />
   	<arg name="frame_id" default="/wgs84" />
   	<arg name="use_GNSS_time" default="False" />
   	<arg name="time_ref_source" default="gps" />
   	<arg name="useRMC" default="False" />
 
-	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" output="screen"> 
+	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" output="screen">
 	</node>
 	<node name="imu" pkg="uri_usv" type="imu" output="screen">
 	</node>
 	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
-		<param name = "constant_dt"  value ="0.0"/>		
+		<param name = "constant_dt"  value ="0.0"/>
+		<remap from="/imu/data" to="/sensor/imu/data" />
+		<remap from="imu/data_raw" to="/sensor/imu/data_raw"/>
+		<remap from="imu/mag" to="/sensor/imu/mag"/>
 	</node>
-	
+
 	<node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
     		<param name="port" value="$(arg port)"/>
     		<param name="baud" value="$(arg baud)" />
     		<param name="frame_id" value="$(arg frame_id)" />
     		<param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
     		<param name="time_ref_source" value="$(arg time_ref_source)" />
- 		<param name="useRMC" value="$(arg useRMC)" />
+		<param name="useRMC" value="$(arg useRMC)" />
+		<remap from="/fix" to="/sensor/m_fix" />
+		<remap from="/vel" to="/sensor/m_vel" />
+		<remap from="/time_reference" to="/sensor/m_time_reference" />
   	</node>
-	<remap from="/rf/joy" to="/joy"/>
 	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen">
 		<param name="port_name" type="string" value="$(arg port_name)"/>
 		<param name="ROS2NMEA" value="19" />
 		<param name="NMEA2ROS" value="64" />
+		<remap from="/rf/joy" to="/joy"/>
 	</node>
 	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat" output="screen">
 		<param name = "hz"  value ="10.0"/>
