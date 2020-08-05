@@ -42,7 +42,10 @@ Guidance::Guidance()
 		pre_point.y=y;
 		start=1;
 	}
-	followPath(x, y, psi); //x,y is the position in map frame. 
+	if(start==1)
+	{
+		followPath(x, y, psi);
+	}//x,y is the position in map frame.
 	ROS_INFO("pre_point[%f,%f]", pre_point.x,pre_point.y);
 	ROS_INFO("current[%f,%f]", x,y);
     rate.sleep();
@@ -54,8 +57,8 @@ Guidance::~Guidance() {}
 void Guidance::getgps(const sensor_msgs::NavSatFix & fix) 
 { 
     LLtoUTM(1, fix.latitude, fix.longitude, N, E, Z);  // get utm coordinate
-	x=N;
-	y=E;
+	x=E;
+	y=N;
 }
 
 void Guidance::getimu(const sensor_msgs::Imu::ConstPtr& msg) 
@@ -82,20 +85,20 @@ void Guidance::followPath(double x, double y, double psi)
 		index=0;
 	}
 	LLtoUTM(1, lat[index], lon[index], N, E, Z);
-	next_point.x = N;
-	next_point.y = E;
+	next_point.x = E;
+	next_point.y = N;
 	double dist = std::sqrt(std::pow(x - next_point.x, 2) +
                             std::pow(y - next_point.y, 2));
 	if (dist<THRESHOULD_D){     
 		index++;
 		pre_point=next_point;
 		LLtoUTM(1, lat[index], lon[index], N, E, Z);
-		next_point.x = N;
-		next_point.y = E;
+		next_point.x = E;
+		next_point.y = N;
 	}
     //ROS_INFO("num,index[%d,%d]", num,index);
-	//ROS_INFO("next[%f,%f]", next_point.x,next_point.y);
-	UTMtoLL(1, next_point.x, next_point.y, Z, Lat, Long);
+	ROS_INFO("next[%f,%f]", next_point.x,next_point.y);
+	UTMtoLL(1, next_point.y, next_point.x, Z, Lat, Long);
 	gpsnext_point.x=Lat;
 	gpsnext_point.y=Long;
 	pubnextwp.publish(gpsnext_point);

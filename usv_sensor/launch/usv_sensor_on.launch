@@ -7,18 +7,21 @@
   	<arg name="time_ref_source" default="gps" />
   	<arg name="useRMC" default="False" />
 
-	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" output="screen">
+	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" >
 	</node>
 	<node name="imu" pkg="uri_usv" type="imu" output="screen">
 	</node>
-	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
+	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node">
 		<param name = "constant_dt"  value ="0.0"/>
+		<param name = "use_mag" value ="true"/>
+		<param name = "use_magnetic_field_msg"  value ="true"/>
+		<param name = "world_frame"  value ="enu"/>	
 		<remap from="/imu/data" to="/sensor/imu/data" />
 		<remap from="imu/data_raw" to="/sensor/imu/data_raw"/>
 		<remap from="imu/mag" to="/sensor/imu/mag"/>
 	</node>
 
-	<node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+	<node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" >
     		<param name="port" value="$(arg port)"/>
     		<param name="baud" value="$(arg baud)" />
     		<param name="frame_id" value="$(arg frame_id)" />
@@ -29,13 +32,13 @@
 		<remap from="/vel" to="/sensor/m_vel" />
 		<remap from="/time_reference" to="/sensor/m_time_reference" />
   	</node>
-	<node name="rf_node" pkg="digi_rf" type="rf_node" output="screen">
+	<node name="rf_node" pkg="digi_rf" type="rf_node" >
 		<param name="port_name" type="string" value="$(arg port_name)"/>
 		<param name="ROS2NMEA" value="19" />
 		<param name="NMEA2ROS" value="64" />
 		<remap from="/rf/joy" to="/joy"/>
 	</node>
-	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat" output="screen">
+	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat">
 		<param name = "hz"  value ="10.0"/>
 	</node>
 </launch>
