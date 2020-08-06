@@ -45,7 +45,7 @@ class HeadingPID
 		stdb_thrust_pub = nh.advertise<std_msgs::Float64>("/gnc/stdb_cmd", 2);
 		port_thrust_pub = nh.advertise<std_msgs::Float64>("/gnc/port_cmd", 2);
 		imu_sub = nh.subscribe("/sensor/imu/data",2,&HeadingPID::imu_callback,this);
-	  	gps_sub = nh.subscribe("/sensor/vel",2,&HeadingPID::gps_callback,this);
+	  	gps_sub = nh.subscribe("/sensor/m_vel",2,&HeadingPID::gps_callback,this);
 		c_heading_sub = nh.subscribe("/gnc/c_heading",2,&HeadingPID::c_heading_callback,this);
 		//parameters
 		//default
@@ -116,10 +116,15 @@ class HeadingPID
 			if(stdb_pwm.data<0) stdb_pwm.data=0;
 			if(port_pwm.data>1) port_pwm.data=1;
 			if(port_pwm.data<0) port_pwm.data=0;
-			ROS_INFO("port_cmd,stdb_cmd[%f,%f]", port_pwm.data, stdb_pwm.data,);
+			ROS_INFO("port_cmd,stdb_cmd[%f,%f]", port_pwm.data, stdb_pwm.data);
 			//publish
-			stdb_thrust_pub.publish(stdb_pwm);
-			port_thrust_pub.publish(port_pwm);
+			if(!std::isnan(port_pwm.data)&&!std::isnan(stdb_pwm.data))
+			{
+				ROS_INFO("port_cmd,stdb_cmd[%f,%f]", port_pwm.data, stdb_pwm.data);
+				stdb_thrust_pub.publish(stdb_pwm);
+				port_thrust_pub.publish(port_pwm);
+			}
+
 			ros::spinOnce();
 			loop_rate.sleep();
 		}
