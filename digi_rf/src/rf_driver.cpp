@@ -119,7 +119,7 @@ void RF::fix_callback(const sensor_msgs::NavSatFix::ConstPtr& msg)
 }
 void RF::vel_callback(const geometry_msgs::TwistStamped::ConstPtr& msg)
 {
-	gps_val.sog = pow(msg->twist.linear.x,2) + pow(msg->twist.linear.x,2); //m/s
+	gps_val.sog = sqrt(pow(msg->twist.linear.x,2) + pow(msg->twist.linear.y,2) ); //m/s
 	gps_val.cog = atan2(msg->twist.linear.x, msg->twist.linear.y)*180/3.1415926; //deg
 }
 

@@ -7,9 +7,9 @@
   	<arg name="time_ref_source" default="gps" />
   	<arg name="useRMC" default="False" />
 
-	<node name="VI_sensor" pkg="uri_usv" type="VI_sensor" >
+	<node name="VI_sensor" pkg="usv_sensor" type="VI_sensor" >
 	</node>
-	<node name="imu" pkg="uri_usv" type="imu" output="screen">
+	<node name="imu" pkg="usv_sensor" type="imu">
 	</node>
 	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node">
 		<param name = "constant_dt"  value ="0.0"/>
@@ -41,4 +41,4 @@
 	<node name="rf_tx_beat" pkg="digi_rf" type="rf_tx_beat">
 		<param name = "hz"  value ="10.0"/>
 	</node>
-</launch>
+</launch>                
