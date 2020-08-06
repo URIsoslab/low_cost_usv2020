@@ -118,8 +118,13 @@ class HeadingPID
 			if(port_pwm.data<0) port_pwm.data=0;
 			ROS_INFO("port_cmd,stdb_cmd[%f,%f]", port_pwm.data, stdb_pwm.data);
 			//publish
-			stdb_thrust_pub.publish(stdb_pwm);
-			port_thrust_pub.publish(port_pwm);
+			if(!isnan(port_pwm.data)&&!isnan(port_pwm.data))
+			{
+				ROS_INFO("port_cmd,stdb_cmd[%f,%f]", port_pwm.data, stdb_pwm.data);
+				stdb_thrust_pub.publish(stdb_pwm);
+				port_thrust_pub.publish(port_pwm);
+			}
+
 			ros::spinOnce();
 			loop_rate.sleep();
 		}
