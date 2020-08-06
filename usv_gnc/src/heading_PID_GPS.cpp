@@ -70,6 +70,7 @@ class HeadingPID
 	void gps_callback(const geometry_msgs::TwistStamped& msg)
 	{				
 		m_heading = std::atan2(msg.twist.linear.y,msg.twist.linear.x)*RAD_TO_DEG;
+		ROS_INFO("m_heading[%f]", m_heading);
 	}
 
 	void imu_callback(const sensor_msgs::Imu::ConstPtr& msg)
@@ -81,6 +82,7 @@ class HeadingPID
 	{
 		c_heading = msg->data;
 		i_heading =0;
+		ROS_INFO("c_heading[%f]", c_heading);
 	}
 
 	void running()
@@ -105,7 +107,7 @@ class HeadingPID
 
 			i_heading = i_heading+e_heading*dt; //compute integration error
 			delta_pwm = K_g*(K_p*e_heading + K_i*i_heading + K_d*d_heading);
-			ROS_INFO("%f|%f|%f",delta_pwm,dt,ct);
+			//ROS_INFO("%f|%f|%f",delta_pwm,dt,ct);
 			stdb_pwm.data = total_pwm/2.0 + delta_pwm/2.0;
 			port_pwm.data = total_pwm - stdb_pwm.data;
 
@@ -114,7 +116,7 @@ class HeadingPID
 			if(stdb_pwm.data<0) stdb_pwm.data=0;
 			if(port_pwm.data>1) port_pwm.data=1;
 			if(port_pwm.data<0) port_pwm.data=0;
-
+			ROS_INFO("port_cmd,stdb_cmd[%f,%f]", port_pwm.data, stdb_pwm.data,);
 			//publish
 			stdb_thrust_pub.publish(stdb_pwm);
 			port_thrust_pub.publish(port_pwm);
