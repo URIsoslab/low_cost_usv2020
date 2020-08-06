@@ -75,6 +75,9 @@ link_directories(
 add_executable(heading_PID src/heading_PID.cpp)
 target_link_libraries(heading_PID roboticscape ${catkin_LIBRARIES})
 
+add_executable(heading_PID_GPS src/heading_PID_GPS.cpp)
+target_link_libraries(heading_PID_GPS roboticscape ${catkin_LIBRARIES})
+
 
 add_executable(auto_pwm src/auto_pwm.cpp)
 target_link_libraries(auto_pwm roboticscape ${catkin_LIBRARIES})
