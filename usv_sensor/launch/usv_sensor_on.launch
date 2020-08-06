@@ -7,9 +7,9 @@
   	<arg name="time_ref_source" default="gps" />
   	<arg name="useRMC" default="True" />
 
-	<node name="VI_sensor" pkg="usv_sensor" type="VI_sensor" >
+	<node name="VI_sensor" pkg="g_usv" type="VI_sensor" >
 	</node>
-	<node name="imu" pkg="usv_sensor" type="imu" output="screen">
+	<node name="imu" pkg="g_usv" type="imu" output="screen">
 	</node>
 	<node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node">
 		<param name = "constant_dt"  value ="0.0"/>
