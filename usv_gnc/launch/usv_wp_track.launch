@@ -3,7 +3,7 @@
 	<include file="$(find usv_sensor)/launch/usv_sensor_on.launch"/>
 	<node name="auto_pwm" pkg="usv_gnc" type="auto_pwm" >
 	</node>
-	<node name="heading_PID" pkg="usv_gnc" type="heading_PID">
+	<node name="heading_PID" pkg="usv_gnc" type="heading_PID_GPS">
 		<param name = "K_p"  value ="40.0"/>
 		<param name = "K_i"   value ="0.01"/>
 		<param name = "K_d"   value ="20.0"/>
@@ -13,7 +13,7 @@
      	<!--guidance  /-->
 	<node name="guidance_node" pkg="usv_gnc" type="guidance_node"  output="screen">
 		<remap from="/c_heading" to="/control/heading" />
-   		<rosparam param="lat">[41.42994,41.4299121]</rosparam>
-    		<rosparam param="lon">[-71.56751,-71.5678130]</rosparam>
+   		<rosparam param="lat">[41.43039,41.43221]</rosparam>
+    		<rosparam param="lon">[-71.56793,-71.56777]</rosparam>
 	</node>
 </launch>
