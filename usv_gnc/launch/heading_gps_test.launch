@@ -1,5 +1,4 @@
 <launch>
-	<!-- Launch sensor launch file in usv_sensor package/-->
 	<include file="$(find usv_sensor)/launch/usv_sensor_on.launch"/>
 	<node name="auto_pwm" pkg="usv_gnc" type="auto_pwm" >
 	</node>
@@ -9,11 +8,5 @@
 		<param name = "K_d"   value ="20.0"/>
 		<param name = "K_g"   value ="0.001"/>
 		<param name = "Total_thrust" value ="1.6"/>
-	</node>
-     	<!--guidance  /-->
-	<node name="guidance_node" pkg="usv_gnc" type="guidance_node"  output="screen">
-		<remap from="/c_heading" to="/control/heading" />
-   		<rosparam param="lat">[41.43039,41.43221]</rosparam>
-    		<rosparam param="lon">[-71.56793,-71.56777]</rosparam>
 	</node>
 </launch>
