@@ -13,7 +13,7 @@
      	<!--guidance  /-->
 	<node name="guidance_node" pkg="usv_gnc" type="guidance_node"  output="screen">
 		<remap from="/c_heading" to="/control/heading" />
-   		<rosparam param="lat">[41.429646,41.4301,41.43007]</rosparam>
-    		<rosparam param="lon">[-71.567755,-71.567659,-71.56745]</rosparam>
+   		<rosparam param="lat">[41.42997,41.43033,41,43036,41.42997]</rosparam>
+    		<rosparam param="lon">[-71.56778,-71.56778,-71.56737,-71.56737]</rosparam>
 	</node>
 </launch>
