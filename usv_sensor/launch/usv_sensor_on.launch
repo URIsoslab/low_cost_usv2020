@@ -33,7 +33,7 @@
 		<remap from="/time_reference" to="/sensor/m_time_reference" />
   	</node>
 	<node name="rf_node" pkg="digi_rf" type="rf_node" >
-		<param name="port_name" type="string" value="$(arg port_name)"/>
+		<param name="port_name" type="string" value="/dev/ttyS1"/>
 		<param name="ROS2NMEA" value="19" />
 		<param name="NMEA2ROS" value="64" />
 		<remap from="/rf/joy" to="/joy"/>
