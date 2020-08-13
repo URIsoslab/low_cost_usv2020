@@ -2,6 +2,7 @@
 Jan-09-2020 Mingxi This node sets the PWM to two motors
 										changed the ros node Subscriber
 										directly subscribe to joy message
+Aug-12-2020 heartbeat added. This node will stop if there are no heatbeat signals in 4s.
 */
 
 //include c language libraries
@@ -18,7 +19,7 @@ extern "C" {
 #include "std_msgs/Int8.h"
 #include "sensor_msgs/Joy.h"
 
-int c_port_cmd = 0,c_stdb_cmd=0;
+int c_port_cmd = 0,c_stdb_cmd=0,heartbeat=0,count=0;
 std_msgs::Float64 c_port_duty, c_stdb_duty;
 int running = 0;
 int INIT_PULSE_WIDTH = 1000; //us
@@ -113,6 +114,11 @@ void MySigintHandler(int sig)
   	ros::shutdown();
 }
 
+void heartbeatCallback(const std_msgs::Int8::ConstPtr& msg)
+{
+    heartbeat=heartbeat+1;
+}
+
 int main(int argc, char** argv)
 {
   	usleep(100000);  //there will be problems if there is no delay here
@@ -142,6 +148,7 @@ int main(int argc, char** argv)
 	ros::Subscriber sub1 = nh.subscribe("/joy", 2, Motor_Callback);
 	ros::Subscriber sub2 = nh.subscribe("/gnc/stdb_cmd",2, stdb_callback);
 	ros::Subscriber sub3 = nh.subscribe("/gnc/port_cmd",2, port_callback);
+	ros::Subscriber sub4 = nh.subscribe("/heartbeat", 2, heartbeatCallback);
 	ros::Publisher port_pwm_pub = nh.advertise<std_msgs::Int8>("/joy/port_cmd", 2);
   	ros::Publisher stdb_pwm_pub = nh.advertise<std_msgs::Int8>("/joy/stdb_cmd", 2);
 	ros::Publisher mode_pub = nh.advertise<std_msgs::Int8>("/gnc/mode",2);
@@ -154,7 +161,14 @@ int main(int argc, char** argv)
 	//START THE LOOP
   	while (ros::ok() & running)
   	{
-
+		count++;
+		if(count>200){
+		  if(heartbeat<1){
+			  ros::shutdown();
+		  }
+		  count=0;
+		  heartbeat=0;
+		}
 	  	// send pwm adjust command
 		rc_servo_send_pulse_us(1, c_port_cmd);//port side
 		rc_servo_send_pulse_us(3, c_stdb_cmd);//starboard side
