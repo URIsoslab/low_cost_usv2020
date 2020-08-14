@@ -1,7 +1,7 @@
 <launch>
 	<arg name="port_name" default="/dev/ttyS1"/>
-	<arg name="port" default="/dev/ttyS5" />
- 	<arg name="baud" default="115200" />
+	<arg name="port" default="/dev/ttyUSB0" />
+ 	<arg name="baud" default="9600" />
   	<arg name="frame_id" default="/wgs84" />
   	<arg name="use_GNSS_time" default="False" />
   	<arg name="time_ref_source" default="gps" />

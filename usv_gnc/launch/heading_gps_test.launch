@@ -2,11 +2,12 @@
 	<include file="$(find usv_sensor)/launch/usv_sensor_on.launch"/>
 	<node name="auto_pwm" pkg="usv_gnc" type="auto_pwm" >
 	</node>
-	<node name="heading_PID" pkg="usv_gnc" type="heading_PID_GPS">
-		<param name = "K_p"  value ="40.0"/>
+	<node name="heartbeat_sender" pkg="usv_gnc" type="heartbeat_sender"/>
+	<node name="heading_PID" pkg="usv_gnc" type="heading_PID_GPS" output="screen">
+		<param name = "K_p"  value ="50.0"/>
 		<param name = "K_i"   value ="0.01"/>
-		<param name = "K_d"   value ="20.0"/>
+		<param name = "K_d"   value ="300.0"/>
 		<param name = "K_g"   value ="0.001"/>
-		<param name = "Total_thrust" value ="1.6"/>
+		<param name = "Total_thrust" value ="2"/>
 	</node>
 </launch>

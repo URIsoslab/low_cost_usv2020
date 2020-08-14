@@ -2,19 +2,19 @@
 	<!-- Launch sensor launch file in usv_sensor package/-->
 	<include file="$(find usv_sensor)/launch/usv_sensor_on.launch"/>
 	<node name="heartbeat_sender" pkg="usv_gnc" type="heartbeat_sender" />
-	<node name="auto_pwm" pkg="usv_gnc" type="auto_pwm" launch-prefix="sudo -E">
+	<node name="auto_pwm" pkg="usv_gnc" type="auto_pwm">
 	</node>
 	<node name="heading_PID" pkg="usv_gnc" type="heading_PID_GPS">
-		<param name = "K_p"  value ="40.0"/>
+		<param name = "K_p"  value ="50.0"/>
 		<param name = "K_i"   value ="0.01"/>
-		<param name = "K_d"   value ="20.0"/>
+		<param name = "K_d"   value ="300.0"/>
 		<param name = "K_g"   value ="0.001"/>
-		<param name = "Total_thrust" value ="1.6"/>
+		<param name = "Total_thrust" value ="2"/>
 	</node>
      	<!--guidance  /-->
 	<node name="guidance_node" pkg="usv_gnc" type="guidance_node"  output="screen">
 		<remap from="/c_heading" to="/control/heading" />
-   		<rosparam param="lat">[41.429646,41.4301,41.43007]</rosparam>
-    		<rosparam param="lon">[-71.567755,-71.567659,-71.56745]</rosparam>
+   		<rosparam param="lat">[41.429883,41.430376]</rosparam>
+    		<rosparam param="lon">[-71.56762,-71.567488]</rosparam>
 	</node>
 </launch>
