@@ -81,6 +81,9 @@ target_link_libraries(heading_PID_GPS roboticscape ${catkin_LIBRARIES})
 add_executable(heartbeat_sender src/heartbeat_sender.cpp)
 target_link_libraries(heartbeat_sender roboticscape ${catkin_LIBRARIES})
 
+#add_executable(utmtest src/utmtest.cpp)
+#target_link_libraries(utmtest roboticscape ${catkin_LIBRARIES})
+
 add_executable(auto_pwm src/auto_pwm.cpp)
 target_link_libraries(auto_pwm roboticscape ${catkin_LIBRARIES})
 
