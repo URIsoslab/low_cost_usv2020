@@ -109,7 +109,7 @@ void Guidance::followPath(double x, double y, double psi)
 	double ddy=next_point.y-y;
 	double l_ag = std::atan2(dy,dx);// dx dy 
 	double et=-std::sin(l_ag)*ddx + std::cos(l_ag)*ddy;
-	double c_heading = std::atan2(ddy,ddx) - std::atan(-et/DENO); //+ - ddy ddx
+	double c_heading = std::atan2(dy,dx) - std::atan(-et/DENO); //+ - ddy ddx
 	c_heading = c_heading*180/3.1415;
 	if(c_heading<-180)
 	{
