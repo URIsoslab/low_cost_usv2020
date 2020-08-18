@@ -28,10 +28,10 @@ Guidance::Guidance()
 	pre_point.z=0.0;  
 	ros::Subscriber sub1 = nh.subscribe("/sensor/m_fix", 5, &Guidance::getgps, this);
 	ros::Subscriber sub2 = nh.subscribe("/sensor/imu/data", 5, &Guidance::getimu, this);
-	m_controllerPub =nh.advertise<std_msgs::Float64>("/gnc/c_heading", 5);
+	m_controllerPub =nh.advertise<std_msgs::Float64>("/gnc/c_heading", 2);
 	//pubstop =nh.advertise<std_msgs::Int8>("stop", 5);
 	pubnextwp =nh.advertise<geometry_msgs::Point32>("/gnc/next_wp", 5);
-	ros::Rate rate(10.0);
+	ros::Rate rate(2.0);
 	while (nh.ok())
 	{
     // Get the pose of the robot in the map frame

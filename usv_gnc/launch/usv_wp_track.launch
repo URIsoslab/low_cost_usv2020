@@ -5,16 +5,16 @@
 	<node name="auto_pwm" pkg="usv_gnc" type="auto_pwm">
 	</node>
 	<node name="heading_PID" pkg="usv_gnc" type="heading_PID_GPS">
-		<param name = "K_p"  value ="50.0"/>
-		<param name = "K_i"   value ="0.01"/>
-		<param name = "K_d"   value ="300.0"/>
+		<param name = "K_p"  value ="60.0"/>
+		<param name = "K_i"   value ="0.0"/>
+		<param name = "K_d"   value ="500.0"/>
 		<param name = "K_g"   value ="0.001"/>
 		<param name = "Total_thrust" value ="2"/>
 	</node>
      	<!--guidance  /-->
 	<node name="guidance_node" pkg="usv_gnc" type="guidance_node"  output="screen">
 		<remap from="/c_heading" to="/control/heading" />
-   		<rosparam param="lat">[41.429883,41.430376]</rosparam>
-    		<rosparam param="lon">[-71.56762,-71.567488]</rosparam>
+   		<rosparam param="lat">[41.429883,41.430376,41.430376,41.429883]</rosparam>
+    		<rosparam param="lon">[-71.56762,-71.567488,-71.5679,-71.5679]</rosparam>
 	</node>
 </launch>
