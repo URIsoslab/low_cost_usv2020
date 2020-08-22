@@ -1,0 +1,6 @@
+<launch>
+	<node name="utmtest" pkg="usv_gnc" type="utmtest"  output="screen">
+   		<rosparam param="lat">[41.429646,41.4301,41.43007,41.43794,41.43074]</rosparam>
+    		<rosparam param="lon">[-71.567755,-71.567659,-71.56745,-71.57612,-71.56712]</rosparam>
+	</node>
+</launch>

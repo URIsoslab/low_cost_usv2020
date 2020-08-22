@@ -3,9 +3,6 @@
 	<arg name="port" default="/dev/ttyUSB0" />
  	<arg name="baud" default="9600" />
   	<arg name="frame_id" default="/wgs84" />
-  	<arg name="use_GNSS_time" default="False" />
-  	<arg name="time_ref_source" default="gps" />
-  	<arg name="useRMC" default="True" />
 
 	<node name="VI_sensor" pkg="usv_sensor" type="VI_sensor" >
 	</node>
@@ -21,17 +18,12 @@
 		<remap from="imu/mag" to="/sensor/imu/mag"/>
 	</node>
 
-	<node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" >
-    		<param name="port" value="$(arg port)"/>
+	<node name="gps_node" pkg="gps_driver" type="gps_node" output="screen">
+		<param name="port_name" value="$(arg port_name)" />
     		<param name="baud" value="$(arg baud)" />
     		<param name="frame_id" value="$(arg frame_id)" />
-    		<param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
-    		<param name="time_ref_source" value="$(arg time_ref_source)" />
-		<param name="useRMC" value="$(arg useRMC)" />
-		<remap from="/fix" to="/sensor/m_fix" />
-		<remap from="/vel" to="/sensor/m_vel" />
-		<remap from="/time_reference" to="/sensor/m_time_reference" />
-  	</node>
+	</node>
+
 	<node name="rf_node" pkg="digi_rf" type="rf_node" >
 		<param name="port_name" type="string" value="/dev/ttyS1"/>
 		<param name="ROS2NMEA" value="19" />

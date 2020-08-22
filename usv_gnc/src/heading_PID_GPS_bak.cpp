@@ -3,16 +3,15 @@
 Jan-09-2020, Mingxi, Code clean up, and remove the rpm averaging
                      changed topic name with standard prefix
                      m_imu, m_rpy, m_heading
-Aug-20-2020,	Jianguang, get m_heading directed from GPSFix.msg published by the new gps driver.			 
 */
 //include C language libraries
 //extern "C" {
 //#include "rc_usefulincludes.h"
-//} 
+//}
 extern "C" {
 #include "roboticscape.h"
 }
-#include "gps_common/GPSFix.h"
+
 #include <stdio.h>
 #include <getopt.h>
 #include <signal.h>
@@ -25,6 +24,7 @@ extern "C" {
 //#include "sensor_msgs/Imu.h"
 #include "sensor_msgs/MagneticField.h"
 #include "geometry_msgs/Quaternion.h"
+#include "geometry_msgs/TwistStamped.h"
 #include "geometry_msgs/Vector3.h"
 #include "std_msgs/Float64.h"
 #include <tf/tf.h>
@@ -45,7 +45,7 @@ class HeadingPID
 		stdb_thrust_pub = nh.advertise<std_msgs::Float64>("/gnc/stdb_cmd", 2);
 		port_thrust_pub = nh.advertise<std_msgs::Float64>("/gnc/port_cmd", 2);
 		imu_sub = nh.subscribe("/sensor/imu/data",2,&HeadingPID::imu_callback,this);
-	  	gps_sub = nh.subscribe("/sensor/gps_data",2,&HeadingPID::gps_callback,this);
+	  	gps_sub = nh.subscribe("/sensor/m_vel",2,&HeadingPID::gps_callback,this);
 		c_heading_sub = nh.subscribe("/gnc/c_heading",2,&HeadingPID::c_heading_callback,this);
 		//parameters
 		//default
@@ -67,9 +67,9 @@ class HeadingPID
 		ct = ros::Time::now().toSec();
 	}
 
-	void gps_callback(const gps_common::GPSFix& msg)
+	void gps_callback(const geometry_msgs::TwistStamped& msg)
 	{				
-		m_heading = msg.track;
+		m_heading = std::atan2(msg.twist.linear.y,msg.twist.linear.x)*RAD_TO_DEG;
 		ROS_INFO("m_heading[%f]", m_heading);
 	}
 

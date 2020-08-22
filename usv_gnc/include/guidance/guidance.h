@@ -3,7 +3,7 @@
 #define THRESHOULD_D 10 //threshould to comfirm a waypoint is reached
 #define DENO 15 //c_heading = std::atan2(ddy,ddx) - std::atan(-et/DENO);
 #include <geometry_msgs/Point32.h>
-#include <sensor_msgs/NavSatFix.h>
+#include "gps_common/GPSFix.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/Int8.h"
 #include <ros/ros.h>
@@ -20,7 +20,7 @@ public:
 
 private:
   void followPath(double x, double y, double psi);
-  void getgps(const sensor_msgs::NavSatFix & gps);
+  void getgps(const gps_common::GPSFix& fix);
   void getimu(const sensor_msgs::Imu::ConstPtr& msg);
   //double dist(double x0, double y0, double x1, double y1) const;
   double x=0.0, y=0.0, psi=0.0;
