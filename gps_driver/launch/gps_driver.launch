@@ -1,0 +1,10 @@
+<launch>
+	<arg name="port_name" default="/dev/ttyACM0" />
+ 	<arg name="baud" default="9600" />
+  	<arg name="frame_id" default="/wgs84" />
+	<node name="gps_node" pkg="gps_driver" type="gps_node" output="screen">
+		<param name="port_name" value="$(arg port_name)" />
+    		<param name="baud" value="$(arg baud)" />
+    		<param name="frame_id" value="$(arg frame_id)" />
+	</node>
+</launch>
